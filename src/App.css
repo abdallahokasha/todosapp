@@ -1,7 +1,12 @@
 .App {
   text-align: center;
+  padding: 0px 20px 20px 20px;
 }
 
+#root {
+  background-color: #f2f2f2;
+  height: unset;
+}
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 40vmin;
@@ -31,15 +36,13 @@
   }
 }
 
-#TodoDiv{ 
-  width: 40%;
+#viewTodoDiv{ 
+  width: 100%;
   height: 40%;
   padding: 10px;
-  margin: 10px;
   border-radius: 6px;
-  border-style: solid;
-  border-color: #ccc;
-  border-width: 2px;
+  border: 1px solid #ccc;
+  background-color: white;
 }
 
 input[type=text], select {
@@ -80,7 +83,6 @@ input[type=submit]:hover {
 
 div {
   border-radius: 5px;
-  background-color: #f2f2f2;
   padding: 20px;
 }
 
@@ -103,7 +105,10 @@ div {
 .navBtn-group .navButton:focus {
   outline: none;
   border-bottom: 2px solid #409ce0;
-
+}
+.navButton:focus-within {
+  outline: none;
+  border-bottom: 2px solid #409ce0;
 }
 
 button {
@@ -120,6 +125,12 @@ button {
   transition-duration: 0.4s;
   cursor: pointer;
 }
+.todoButtons {
+  padding: 4px 8px;
+  font-size: 14px;
+}
+
+
 .roundedButton{
 border-radius: 6px;
 }
@@ -128,14 +139,26 @@ button:hover {
   background-color: #008CBA;
   color: white;
 }
+button:focus {
+  outline: none;
+}
 
 textarea {
   border: 1px solid #ccc;
   background: white;
   color: black;
   padding: 12px;
-  /* width: 500px;
-  height: 300px; */
+  font-size: larger;
+  resize: none;
+  width: 90%;
+}
+
+.f2Gray{
+  background-color: #f2f2f2;
+}
+
+.noBorder {
+  border: none !important; 
 }
 
 #signupDiv {
@@ -152,9 +175,11 @@ textarea {
 	overflow-y: scroll;
 	margin-bottom: 25px;
 }
+
+
 #roundedBar::-webkit-scrollbar-track
 {
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	-webkit-box-shadow: inset 0 0 6px #0000004d;
 	border-radius: 10px;
 	background-color: #F5F5F5;
 }
@@ -168,6 +193,30 @@ textarea {
 #roundedBar::-webkit-scrollbar-thumb
 {
 	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	-webkit-box-shadow: inset 0 0 6px #0000004d;
 	background-color: #ccc;
+}
+
+#addNewTodoDiv {
+    border: 1px solid #ccc;
+    background-color: white;
+    box-shadow: 0 2px 4px 0 #00000033,
+    0 3px 10px 0 #00000030;
+    width: 75%;
+}
+
+#colorPickerDiv{
+height: 50px;
+width: 50px;
+}
+
+.leftPosition {
+  float: left;
+}
+
+#filterByTagInputField {
+width: 50%;
+}
+.grayColor1 {
+  color: #ccc;
 }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
@@ -18,7 +17,7 @@ const NavMenu = () => {
         <button className="navButton">Signin</button>
       </Link>
       <Link to="/">
-        <button className="navButton"> All Todos</button>
+        <button className="navButton" autoFocus> All Todos</button>
       </Link>
       <Link to="/donetodos">
         <button className="navButton">Done Todos</button>
@@ -32,21 +31,7 @@ class App extends Component {
     return (
       <Router>
       <div className="App">
-        {/* <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header> */}
-        <h1> Todos App</h1>
+        <h1 className="leftPosition"> Todos App</h1>
         <NavMenu />
         <div>
                 <Route exact path="/" component={Todos} />
