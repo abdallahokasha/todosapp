@@ -24,8 +24,8 @@ class ViewTodo extends Component {
 
     // componentDidUpdate(prevProps) {
     //     // Typical usage (don't forget to compare props):
-    //     if (this.props.todo !== prevProps.todo) {
-    //       this.fetchData(this.props.todo);
+    //     if (this.props !== prevProps) {
+    //       this.fetchData(this.props);
     //     }
     //   }
     handleDescriptionTextChange(event) {
@@ -44,10 +44,10 @@ class ViewTodo extends Component {
         var editedTodo = {
             description: this.state.editTodoDescriptionTextValue,
             tag: this.state.editTodoTagTextValue,
-            color: "#fff"
+            color: "#fff",
+            done: false,
         }
-        this.props.todo = editedTodo;
-        console.log(this.props);
+        this.setState({todo: editedTodo});
         this.props.editTodo(editedTodo, this.state.todoIndex);
     }
     deleteTodo() {
@@ -55,6 +55,7 @@ class ViewTodo extends Component {
     }
     markTodoAsDone() {
         console.log("viewTodo mark as done");
+        console.log(this.props);
         if (this.state.todo.done === false)
             this.props.markTodoAsDone(this.state.todoIndex);
     }
@@ -64,7 +65,8 @@ class ViewTodo extends Component {
     }
 
     render() {
-        const { todo, todoIndex } = this.props;
+        const { todo, todoIndex } = this.state;
+        // console.log(this.props);
         return (
             <div>
                 <div key={todoIndex} id="viewTodoDiv">
@@ -81,15 +83,15 @@ class ViewTodo extends Component {
                         />
                         {/* <p className="grayColor1 leftPosition"> Tag </p> */}
                         <input className="noBorder" placeholder="Tag" type="text" onChange={this.handleTagTextChange} value={this.state.editTodoTagTextValue} />
-                        {!todo.done ? <button className="roundedButton todoButtons" onClick={this.applyTodoEdits} type="submit"> Edit </button> : null}
-                        {!todo.done ? <button className="roundedButton todoButtons" onClick={this.markTodoAsDone} type="button"> Mark as done </button> : null}
+                        <button className="roundedButton todoButtons" onClick={this.applyTodoEdits} type="button"> Edit </button>
+                        <button className="roundedButton todoButtons" onClick={this.markTodoAsDone} type="button"> Mark as done </button>
                     </form>}
                     {todo.done ?
                         <div>
                             <div> {todo.description} </div>
                             <div> {todo.tag} </div>
-                           <button className="roundedButton todoButtons" onClick={this.markTodoAsOngoing} type="button"> Mark as on going </button> 
-                        </div>: null
+                            <button className="roundedButton todoButtons" onClick={this.markTodoAsOngoing} type="button"> Mark as on going </button>
+                        </div> : null
                     }
                     <FontAwesome
                         className='far fa-check-square'

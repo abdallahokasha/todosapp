@@ -11,16 +11,16 @@ const NavMenu = () => {
   return (
     <div className="navBtn-group">
       <Link to="/signup">
-        <button className="navButton">Signup</button>
+        <button id="navButton1" className="navButton">Signup</button>
       </Link>
       <Link to="/signin">
-        <button className="navButton">Signin</button>
+        <button id="navButton2" className="navButton">Signin</button>
       </Link>
       <Link to="/">
-        <button className="navButton" autoFocus> All Todos</button>
+        <button id="navButton3" className="navButton" autoFocus> All Todos</button>
       </Link>
       <Link to="/donetodos">
-        <button className="navButton">Done Todos</button>
+        <button id="navButton4" className="navButton">Done Todos</button>
       </Link>
     </div>
   );
