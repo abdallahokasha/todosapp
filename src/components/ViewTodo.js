@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { withTheme } from '@material-ui/core';
-
-var FontAwesome = require('react-fontawesome');
+//var FontAwesome = require('react-fontawesome');
 
 class ViewTodo extends Component {
     constructor(props) {
@@ -21,13 +19,25 @@ class ViewTodo extends Component {
             editTodoTagTextValue: this.props.todo.tag,
         };
     }
-
+    // static getDerivedStateFromProps(nextProps, prevState) {
+    //     if (nextProps.todo !== prevState.todo) {
+    //       return ({ todo: nextProps.todo, todoIndex: nextProps.todoIndex}) // <- this is setState equivalent
+    //     }
+    //   }
     // componentDidUpdate(prevProps) {
     //     // Typical usage (don't forget to compare props):
     //     if (this.props !== prevProps) {
     //       this.fetchData(this.props);
     //     }
     //   }
+
+    // componentDidUpdate(prevProps) {
+    //     console.log("componentDidUpdate", prevProps, this.props);
+    //     if(prevProps.todo !== this.props.todo && this.props.todo !== undefined) {
+    //     this.setState({todo: this.props.todo, todoIndex: this.props.todoIndex});
+    //     }
+    //   }
+
     handleDescriptionTextChange(event) {
         const editTodoDescriptionTextValue = event.target.value;
         this.setState({ editTodoDescriptionTextValue }, () => { });
@@ -46,8 +56,9 @@ class ViewTodo extends Component {
             tag: this.state.editTodoTagTextValue,
             color: "#fff",
             done: false,
+            show: true,
         }
-        this.setState({todo: editedTodo});
+        this.setState({ todo: editedTodo });
         this.props.editTodo(editedTodo, this.state.todoIndex);
     }
     deleteTodo() {
@@ -65,40 +76,36 @@ class ViewTodo extends Component {
     }
 
     render() {
-        const { todo, todoIndex } = this.state;
-        // console.log(this.props);
+        const { todo, todoIndex } = this.props;
+        console.log(this.props);
         return (
             <div>
                 <div key={todoIndex} id="viewTodoDiv">
-
-                    {todo.done ? null : <form>
-                        {/* <p className="grayColor1 leftPosition"> Description </p> */}
-                        <textarea required
-                            id="roundedBar"
-                            className="scrollBar noBorder"
-                            placeholder="Description*..."
-                            rows="7" cols="60"
-                            value={this.state.editTodoDescriptionTextValue}
-                            onChange={this.handleDescriptionTextChange}
-                        />
-                        {/* <p className="grayColor1 leftPosition"> Tag </p> */}
-                        <input className="noBorder" placeholder="Tag" type="text" onChange={this.handleTagTextChange} value={this.state.editTodoTagTextValue} />
-                        <button className="roundedButton todoButtons" onClick={this.applyTodoEdits} type="button"> Edit </button>
-                        <button className="roundedButton todoButtons" onClick={this.markTodoAsDone} type="button"> Mark as done </button>
-                    </form>}
                     {todo.done ?
                         <div>
+                            <p className="grayColor1 leftPosition"> Description </p>
                             <div> {todo.description} </div>
+                            <p className="grayColor1 leftPosition"> Tag </p>
                             <div> {todo.tag} </div>
                             <button className="roundedButton todoButtons" onClick={this.markTodoAsOngoing} type="button"> Mark as on going </button>
-                        </div> : null
-                    }
-                    <FontAwesome
-                        className='far fa-check-square'
-                        name='check-square'
-                        title="Done"
-                    // onClick={() => }
-                    />
+                        </div>
+                        :
+                        <form>
+                            <p className="grayColor1 leftPosition"> Description </p>
+                            <textarea required
+                                id="roundedBar"
+                                className="scrollBar noBorder"
+                                placeholder="Description*..."
+                                rows="7" cols="60"
+                                value={this.state.editTodoDescriptionTextValue}
+                                onChange={this.handleDescriptionTextChange}
+                            />
+                            <p className="grayColor1 leftPosition"> Tag </p>
+                            <input className="noBorder" placeholder="Tag" type="text" onChange={this.handleTagTextChange} value={this.state.editTodoTagTextValue} />
+                            <button className="roundedButton todoButtons" onClick={this.applyTodoEdits} type="button"> Edit </button>
+                            <button className="roundedButton todoButtons" onClick={this.markTodoAsDone} type="button"> Mark as done </button>
+                            <button id="deleteBtn" className="roundedButton todoButtons" onClick={this.deleteTodo} type="button"> delete </button>
+                        </form>}
                 </div>
             </div>
         );

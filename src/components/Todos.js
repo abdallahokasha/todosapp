@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import ColorPicker from './ColorPicker';
-import { Route } from 'react-router-dom';
 
 import ViewTodo from './ViewTodo';
 import DoneTodos from './DoneTodos';
-
-var FontAwesome = require('react-fontawesome');
 
 class Todos extends Component {
   constructor(props) {
@@ -24,17 +19,16 @@ class Todos extends Component {
 
     this.state = {
       addTodoTagValue: '',
-      addTodoTextFieldValue: '',
+      addTodoDescriptionValue: '',
       filterTodoTagTextValue: '',
       allTodos: JSON.parse(localStorage.getItem('allTodos')) || [],
-      filteredTodos: JSON.parse(localStorage.getItem('allTodos')) || [],
     }
   }
 
   handleTextFieldChange(event) {
-    const addTodoTextFieldValue = event.target.value;
-    this.setState({ addTodoTextFieldValue }, () => { });
-    console.log(this.state.addTodoTextFieldValue);
+    const addTodoDescriptionValue = event.target.value;
+    this.setState({ addTodoDescriptionValue }, () => { });
+    console.log(this.state.addTodoDescriptionValue);
   }
 
   handleInputTagChange(event) {
@@ -46,46 +40,51 @@ class Todos extends Component {
   handleInputFilterTagChange(event) {
     const filterTodoTagTextValue = event.target.value;
     console.log(filterTodoTagTextValue);
-    this.setState({ filterTodoTagTextValue }, () => { this.filterTodos(filterTodoTagTextValue) });
-    //console.log(this.state.filterTodoTagTextValue);
-    // this.filterTodos(filterTodoTagTextValue);
+    this.setState({ filterTodoTagTextValue }, () => { this.filterTodosFun(filterTodoTagTextValue) });
   }
 
-  filterTodos(filterTodoTagTextValue) {
+  filterTodosFun(filterTodoTagTextValue) {
     console.log("FilterTodos Function: ", filterTodoTagTextValue)
-    const allTodos = this.state.allTodos;
-    if (filterTodoTagTextValue.length === 0)
-      this.setState({ filteredTodos: allTodos });
+    var allTodos = this.state.allTodos;
+    if (filterTodoTagTextValue.length === 0) {
+      for (var i = 0; i < allTodos.length; ++i)
+        allTodos[i].show = true;
+      this.setState({ allTodos });
+    }
     else {
-      var filteredTodos = [];
       for (var i = 0; i < allTodos.length; ++i) {
-        if (allTodos[i].tag.includes(filterTodoTagTextValue) === true)
-          filteredTodos.push(allTodos[i]);
+        var tagInLowerCase = allTodos[i].tag.toLowerCase();
+        var filterTodoTagTextValueLowerCase = filterTodoTagTextValue.toLowerCase();
+
+        if (tagInLowerCase.includes(filterTodoTagTextValueLowerCase) === true)
+          allTodos[i].show = true;
+        else allTodos[i].show = false;
+        this.setState({ allTodos }, () => { });
+        console.log(this.state.allTodos);
       }
-      this.setState({ filteredTodos }, () => { });
     }
   }
 
   addTodo() {
-    const addTodoTextFieldValue = this.state.addTodoTextFieldValue;
-    if (addTodoTextFieldValue.length) {
+    const addTodoDescriptionValue = this.state.addTodoDescriptionValue;
+    if (addTodoDescriptionValue.length) {
       var newTodo = {
-        description: this.state.addTodoTextFieldValue,
+        description: this.state.addTodoDescriptionValue,
         tag: this.state.addTodoTagValue,
         done: false,
         color: "#fff",
+        show: true,
       }
+      console.log(this.state.addTodoDescriptionValue, this.state.addTodoTagValue)
       var allTodos = this.state.allTodos;
-      allTodos.unshift(newTodo);
-      this.setState(() => {
-        return {allTodos, filteredTodos: allTodos, addTodoTextFieldValue: '', addTodoTagValue: ''};
-      });
-      localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos));
-      // this.setState({ allTodos, filteredTodos: allTodos, addTodoTextFieldValue: '', addTodoTagValue: '' }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
-      console.log(this.state.filteredTodos);
-      // this.forceUpdate();
+      allTodos.push(newTodo);
+      this.setState({ allTodos, addTodoDescriptionValue: '', addTodoTagValue: '' }, 
+      () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
     }
-    console.log(this.state.allTodos);
+    else {
+      alert("Todo description is required");
+    }
+    console.log(this.state.allTodos, this.state.addTodoDescriptionValue, this.state.addTodoTagValue);
   }
   editTodo(editedTodo, todoIndex) {
     var allTodos = this.state.allTodos;
@@ -96,6 +95,7 @@ class Todos extends Component {
   }
 
   deleteTodo(todoIndex) {
+    console.log(todoIndex);
     var allTodos = this.state.allTodos;
     if (typeof allTodos[todoIndex] !== 'undefined')
       allTodos.splice(todoIndex, 1);
@@ -117,7 +117,11 @@ class Todos extends Component {
       allTodos[todoIndex].done = false;
     this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
   }
+  viewTodo() {
+
+  }
   render() {
+    console.log(this.state.allTodos)
     return (
       <div>
         <div>
@@ -125,63 +129,40 @@ class Todos extends Component {
         </div>
         <Grid container spacing={16}>
           <Grid item xs={4}>
-
             <div id="addNewTodoDiv">
-              <form>
                 <textarea required
                   id="roundedBar"
                   className="scrollBar noBorder"
                   placeholder="Description*..."
                   rows="7" cols="60"
-                  value={this.state.addTodoTextFieldValue}
+                  value={this.state.addTodoDescriptionValue}
                   onChange={this.handleTextFieldChange}
                 />
                 <input className="noBorder" placeholder="Tag" type="text" onChange={this.handleInputTagChange} value={this.state.addTodoTagValue} />
-                <button className="roundedButton todoButtons" onClick={this.addTodo} type="submit"> Add </button>
-              </form>
+                <button className="roundedButton todoButtons" onClick={this.addTodo} type="button"> Add </button>
             </div>
           </Grid>
 
           <Grid item xs={4}>
             <p> On going Todos </p>
-            <div>
-              {this.state.filteredTodos.map((todo, i) => {
-                return (
-                  <div key={i}>
-                    {todo.done ? null : <ViewTodo todo={todo} todoIndex={i}
-                      editTodo={this.editTodo} deleteTodo={this.deleteTodo}
-                      markTodoAsDone={this.markTodoAsDone}
-                      markTodoBackAsOngoing={this.markTodoBackAsOngoing} />}
-                  </div>
-                );
-              })}
-            </div>
+            {this.state.allTodos.map((todo, i) => {
+              return (
+                <div key={i}>
+                  {todo.done || !todo.show ? null : <ViewTodo todo={todo} todoIndex={i}
+                    editTodo={this.editTodo} deleteTodo={this.deleteTodo}
+                    markTodoAsDone={this.markTodoAsDone}
+                    markTodoBackAsOngoing={this.markTodoBackAsOngoing} />}
+                </div>
+              );
+            })}
           </Grid>
-          
           <Grid item xs={4}>
             <p> Done Todos </p>
-            <DoneTodos allTodos={this.state.filteredTodos}
-              editTodo={this.editTodo} deleteTodo={this.deleteTodo}
-              markTodoAsDone={this.markTodoAsDone}
+            <DoneTodos allTodos={this.state.allTodos}
               markTodoBackAsOngoing={this.markTodoBackAsOngoing}
             />
-            {/* <Route
-              path='/donetodos'
-              component={() => <DoneTodos allTodos={this.state.allTodos}
-                editTodo={this.editTodo} deleteTodo={this.deleteTodo}
-                markTodoAsDone={this.markTodoAsDone}
-                markTodoBackAsOngoing={this.markTodoBackAsOngoing}
-              />}
-            /> */}
-            <Route path="/done" render={() => <DoneTodos
-              allTodos={this.state.allTodos}
-              editTodo={this.editTodo} deleteTodo={this.deleteTodo}
-              markTodoAsDone={this.markTodoAsDone}
-              markTodoBackAsOngoing={this.markTodoBackAsOngoing}
-            />} />
           </Grid>
         </Grid>
-        {/* <ColorPicker /> */}
       </div>
     );
   }

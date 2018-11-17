@@ -19,9 +19,7 @@ const NavMenu = () => {
       <Link to="/">
         <button id="navButton3" className="navButton" autoFocus> All Todos</button>
       </Link>
-      <Link to="/donetodos">
-        <button id="navButton4" className="navButton">Done Todos</button>
-      </Link>
+      
     </div>
   );
 };
@@ -37,7 +35,6 @@ class App extends Component {
                 <Route exact path="/" component={Todos} />
                 <Route exact path="/signin" component={Signin} />
                 <Route exact path="/signup" component={Signup} />
-                <Route exact path="/donetodos" component={DoneTodos} />
               </div>
       </div>
       </Router>

@@ -8,17 +8,13 @@ class DoneTodos extends Component {
       allTodos: this.props.allTodos,
     };
   }
-
   render() {
-    //console.log(this.props);
     return (
       <div>
       {this.state.allTodos.map((todo, i) => {
         return (
           <div key={i}>
-            {todo.done ? <ViewTodo todo={todo} todoIndex={i}
-              editTodo={this.props.editTodo} deleteTodo={this.props.deleteTodo}
-              markTodoAsDone={this.props.markTodoAsDone}
+            {todo.done && todo.show ? <ViewTodo todo={todo} todoIndex={i}
               markTodoBackAsOngoing={this.props.markTodoBackAsOngoing} /> : null}
           </div>
         );

@@ -219,5 +219,9 @@ width: 50px;
 width: 50%;
 }
 .grayColor1 {
-  color: #ccc;
+  color: #C0C0C0;
+}
+
+#deleteBtn {
+background-color: red;
 }
