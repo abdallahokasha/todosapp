@@ -19,25 +19,7 @@ class ViewTodo extends Component {
             editTodoTagTextValue: this.props.todo.tag,
         };
     }
-    // static getDerivedStateFromProps(nextProps, prevState) {
-    //     if (nextProps.todo !== prevState.todo) {
-    //       return ({ todo: nextProps.todo, todoIndex: nextProps.todoIndex}) // <- this is setState equivalent
-    //     }
-    //   }
-    // componentDidUpdate(prevProps) {
-    //     // Typical usage (don't forget to compare props):
-    //     if (this.props !== prevProps) {
-    //       this.fetchData(this.props);
-    //     }
-    //   }
-
-    // componentDidUpdate(prevProps) {
-    //     console.log("componentDidUpdate", prevProps, this.props);
-    //     if(prevProps.todo !== this.props.todo && this.props.todo !== undefined) {
-    //     this.setState({todo: this.props.todo, todoIndex: this.props.todoIndex});
-    //     }
-    //   }
-
+  
     handleDescriptionTextChange(event) {
         const editTodoDescriptionTextValue = event.target.value;
         this.setState({ editTodoDescriptionTextValue }, () => { });
@@ -96,7 +78,7 @@ class ViewTodo extends Component {
                                 id="roundedBar"
                                 className="scrollBar noBorder"
                                 placeholder="Description*..."
-                                rows="7" cols="60"
+                                rows="6" cols="60"
                                 value={this.state.editTodoDescriptionTextValue}
                                 onChange={this.handleDescriptionTextChange}
                             />

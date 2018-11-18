@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 
 import ViewTodo from './ViewTodo';
-import DoneTodos from './DoneTodos';
 
 class Todos extends Component {
   constructor(props) {
@@ -11,6 +10,7 @@ class Todos extends Component {
     this.addTodo = this.addTodo.bind(this);
     this.editTodo = this.editTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
+    this.handleTabsView = this.handleTabsView.bind(this);
     this.markTodoAsDone = this.markTodoAsDone.bind(this);
     this.handleInputTagChange = this.handleInputTagChange.bind(this);
     this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
@@ -18,6 +18,8 @@ class Todos extends Component {
     this.handleInputFilterTagChange = this.handleInputFilterTagChange.bind(this);
 
     this.state = {
+      viewAllTodosTab: true,
+      viewDoneTodosTab: false,
       addTodoTagValue: '',
       addTodoDescriptionValue: '',
       filterTodoTagTextValue: '',
@@ -78,8 +80,8 @@ class Todos extends Component {
       console.log(this.state.addTodoDescriptionValue, this.state.addTodoTagValue)
       var allTodos = this.state.allTodos;
       allTodos.push(newTodo);
-      this.setState({ allTodos, addTodoDescriptionValue: '', addTodoTagValue: '' }, 
-      () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+      this.setState({ allTodos, addTodoDescriptionValue: '', addTodoTagValue: '' },
+        () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
     }
     else {
       alert("Todo description is required");
@@ -97,9 +99,15 @@ class Todos extends Component {
   deleteTodo(todoIndex) {
     console.log(todoIndex);
     var allTodos = this.state.allTodos;
-    if (typeof allTodos[todoIndex] !== 'undefined')
-      allTodos.splice(todoIndex, 1);
-    this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+    if (typeof allTodos[todoIndex] !== 'undefined') {
+      //allTodos.splice(todoIndex, 1);
+      var newAllTodos = [];
+      for (var i = 0; i < allTodos.length; ++i) {
+        if (i !== todoIndex)
+          newAllTodos.push(allTodos[i]);
+      }
+      this.setState({ allTodos: newAllTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+    }
   }
 
   markTodoAsDone(todoIndex) {
@@ -117,50 +125,98 @@ class Todos extends Component {
       allTodos[todoIndex].done = false;
     this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
   }
-  viewTodo() {
 
+  handleTabsView(tabName) {
+    if (tabName === 'all')
+      this.setState({ viewAllTodosTab: true, viewDoneTodosTab: false });
+    else
+      this.setState({ viewAllTodosTab: false, viewDoneTodosTab: true });
   }
   render() {
-    console.log(this.state.allTodos)
+    console.log(this.state.viewAllTodosTab)
     return (
       <div>
-        <div>
-          <input id="filterByTagInputField" onChange={this.handleInputFilterTagChange} value={this.state.filterTodoTagTextValue} type="text" placeholder="Filter todos by tag.." />
-        </div>
-        <Grid container spacing={16}>
-          <Grid item xs={4}>
-            <div id="addNewTodoDiv">
-                <textarea required
-                  id="roundedBar"
-                  className="scrollBar noBorder"
-                  placeholder="Description*..."
-                  rows="7" cols="60"
-                  value={this.state.addTodoDescriptionValue}
-                  onChange={this.handleTextFieldChange}
-                />
-                <input className="noBorder" placeholder="Tag" type="text" onChange={this.handleInputTagChange} value={this.state.addTodoTagValue} />
-                <button className="roundedButton todoButtons" onClick={this.addTodo} type="button"> Add </button>
-            </div>
-          </Grid>
-
-          <Grid item xs={4}>
-            <p> On going Todos </p>
-            {this.state.allTodos.map((todo, i) => {
-              return (
-                <div key={i}>
-                  {todo.done || !todo.show ? null : <ViewTodo todo={todo} todoIndex={i}
-                    editTodo={this.editTodo} deleteTodo={this.deleteTodo}
-                    markTodoAsDone={this.markTodoAsDone}
-                    markTodoBackAsOngoing={this.markTodoBackAsOngoing} />}
+        <Grid direction="column" spacing={8} container>
+          <Grid item xs={12}>
+            <Grid spacing={0} container direction="row" justify="flex-start" alignItems="flex-start">
+              <Grid item xs={4}>
+                {/* <h1 className="leftPosition"> Todos App</h1> */}
+                <div className="navBtn-group">
+                  {this.state.viewAllTodosTab ? <div>
+                    <button id="navButtonFocus" className="navButton" onClick={(param) => this.handleTabsView('all')} >All Todos</button>
+                    <button onClick={(param) => this.handleTabsView('done')} className="navButton"> Done Todos</button>
+                  </div> :
+                    <div>
+                      <button className="navButton" onClick={(param) => this.handleTabsView('all')}>All Todos</button>
+                      <button id="navButtonFocus" className="navButton" onClick={(param) => this.handleTabsView('done')}> Done Todos</button>
+                    </div>}
                 </div>
-              );
-            })}
+              </Grid>
+              <Grid item xs={8}><div>
+                <input id="filterByTagInputField" onChange={this.handleInputFilterTagChange} value={this.state.filterTodoTagTextValue} type="text" placeholder="Filter todos by tag.." />
+              </div></Grid>
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <p> Done Todos </p>
-            <DoneTodos allTodos={this.state.allTodos}
-              markTodoBackAsOngoing={this.markTodoBackAsOngoing}
-            />
+          <Grid item xs={12}>
+
+            {this.state.viewAllTodosTab ?
+              <div>
+                <Grid container spacing={8} direction="row">
+                  <Grid item xs={4}>
+                    <div id="addNewTodoDiv">
+                      <textarea required
+                        id="roundedBar"
+                        className="scrollBar noBorder"
+                        placeholder="Description*..."
+                        rows="6" cols="60"
+                        value={this.state.addTodoDescriptionValue}
+                        onChange={this.handleTextFieldChange}
+                      />
+                      <input className="noBorder" placeholder="Tag" type="text" onChange={this.handleInputTagChange} value={this.state.addTodoTagValue} />
+                      <button className="roundedButton todoButtons" onClick={this.addTodo} type="button"> Add </button>
+                    </div>
+                  </Grid>
+
+                  <Grid item xs={4}>
+                    <p> On going Todos </p>
+                    {this.state.allTodos.map((todo, i) => {
+                      return (
+                        <div key={i}>
+                          {todo.done || !todo.show ? null : <ViewTodo todo={todo} todoIndex={i}
+                            editTodo={this.editTodo} deleteTodo={this.deleteTodo}
+                            markTodoAsDone={this.markTodoAsDone}
+                            markTodoBackAsOngoing={this.markTodoBackAsOngoing} />}
+                        </div>
+                      );
+                    })}
+                  </Grid>
+                  <Grid item xs={4}>
+                    <p> Done Todos </p>
+                    {this.state.allTodos.map((todo, i) => {
+                      return (
+                        <div key={i}>
+                          {!todo.done || !todo.show ? null : <ViewTodo todo={todo} todoIndex={i}
+                            markTodoBackAsOngoing={this.markTodoBackAsOngoing} />}
+                        </div>
+                      );
+                    })}
+                  </Grid>
+                </Grid></div> : <div>
+                <Grid container spacing={8} direction="row">
+                  <Grid item xs={4}> </Grid>
+                  <Grid item xs={4}>
+                    <p> Done Todos </p>
+                    {this.state.allTodos.map((todo, i) => {
+                      return (
+                        <div key={i}>
+                          {!todo.done || !todo.show ? null : <ViewTodo todo={todo} todoIndex={i}
+                            markTodoBackAsOngoing={this.markTodoBackAsOngoing} />}
+                        </div>
+                      );
+                    })}
+                  </Grid>
+                </Grid>
+              </div>}
           </Grid>
         </Grid>
       </div>
