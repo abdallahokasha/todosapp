@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
-
+import { Link } from 'react-router-dom';
 import ViewTodo from './ViewTodo';
 
 class Todos extends Component {
@@ -30,18 +30,15 @@ class Todos extends Component {
   handleTextFieldChange(event) {
     const addTodoDescriptionValue = event.target.value;
     this.setState({ addTodoDescriptionValue }, () => { });
-    console.log(this.state.addTodoDescriptionValue);
   }
 
   handleInputTagChange(event) {
     const addTodoTagValue = event.target.value;
     this.setState({ addTodoTagValue }, () => { });
-    console.log(this.state.addTodoTagValue);
   }
 
   handleInputFilterTagChange(event) {
     const filterTodoTagTextValue = event.target.value;
-    console.log(filterTodoTagTextValue);
     this.setState({ filterTodoTagTextValue }, () => { this.filterTodosFun(filterTodoTagTextValue) });
   }
 
@@ -97,16 +94,21 @@ class Todos extends Component {
   }
 
   deleteTodo(todoIndex) {
-    console.log(todoIndex);
     var allTodos = this.state.allTodos;
+    console.log(todoIndex, allTodos[todoIndex]);
     if (typeof allTodos[todoIndex] !== 'undefined') {
-      //allTodos.splice(todoIndex, 1);
-      var newAllTodos = [];
-      for (var i = 0; i < allTodos.length; ++i) {
-        if (i !== todoIndex)
-          newAllTodos.push(allTodos[i]);
-      }
-      this.setState({ allTodos: newAllTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+      allTodos.splice(todoIndex, 1);
+      // var newAllTodos = [];
+      // for (var i = 0; i < allTodos.length; ++i) {
+      //   if (i !== todoIndex)
+      //     newAllTodos.push(allTodos[i]);
+      // }
+      // this.setState({
+      //   allTodos: this.state.allTodos.filter((_, j) => j !== toString)
+      // },  () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos))} );
+      this.setState({allTodos});
+      this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+      console.log(this.state.allTodos);
     }
   }
 
@@ -116,7 +118,7 @@ class Todos extends Component {
     if (typeof allTodos[todoIndex] !== 'undefined')
       allTodos[todoIndex].done = true;
     this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
-    console.log(this.state.allTodos);
+    // console.log(this.state.allTodos);
   }
 
   markTodoBackAsOngoing(todoIndex) {
@@ -133,14 +135,13 @@ class Todos extends Component {
       this.setState({ viewAllTodosTab: false, viewDoneTodosTab: true });
   }
   render() {
-    console.log(this.state.viewAllTodosTab)
     return (
       <div>
+        <Link to="/"><p className="rightPosition"> Logout</p></Link>
         <Grid direction="column" spacing={8} container>
           <Grid item xs={12}>
             <Grid spacing={0} container direction="row" justify="flex-start" alignItems="flex-start">
               <Grid item xs={4}>
-                {/* <h1 className="leftPosition"> Todos App</h1> */}
                 <div className="navBtn-group">
                   {this.state.viewAllTodosTab ? <div>
                     <button id="navButtonFocus" className="navButton" onClick={(param) => this.handleTabsView('all')} >All Todos</button>

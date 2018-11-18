@@ -32,7 +32,6 @@ class ViewTodo extends Component {
     }
 
     applyTodoEdits() {
-        console.log("applyTodoEdits");
         var editedTodo = {
             description: this.state.editTodoDescriptionTextValue,
             tag: this.state.editTodoTagTextValue,
@@ -48,7 +47,7 @@ class ViewTodo extends Component {
     }
     markTodoAsDone() {
         console.log("viewTodo mark as done");
-        console.log(this.props);
+        // console.log(this.props);
         if (this.state.todo.done === false)
             this.props.markTodoAsDone(this.state.todoIndex);
     }
@@ -59,16 +58,16 @@ class ViewTodo extends Component {
 
     render() {
         const { todo, todoIndex } = this.props;
-        console.log(this.props);
+        //console.log(this.props);
         return (
             <div>
                 <div key={todoIndex} id="viewTodoDiv">
                     {todo.done ?
                         <div>
-                            <p className="grayColor1 leftPosition"> Description </p>
-                            <div> {todo.description} </div>
-                            <p className="grayColor1 leftPosition"> Tag </p>
-                            <div> {todo.tag} </div>
+                            
+                            <div><label className="grayColor1 leftPosition"> Description </label> {todo.description} </div>
+                            <div>  <label className="grayColor1 leftPosition"> Tag </label>
+                            {todo.tag} </div>
                             <button className="roundedButton todoButtons" onClick={this.markTodoAsOngoing} type="button"> Mark as on going </button>
                         </div>
                         :

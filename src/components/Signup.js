@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
-
+import { Link } from 'react-router-dom';
 
 class Signup extends Component {
   render() {
@@ -23,14 +23,14 @@ class Signup extends Component {
 
               <label className = "leftPosition" for="psw-repeat"><b>Confirm Password</b></label>
               <input type="password" placeholder="Confirm Password" name="psw-repeat" required />
-
+   
               <label>
                 <input type="checkbox" checked="checked" name="remember" /> Remember me</label>
               <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
 
               <div >
-                <button className="roundedButton" type="button" >Cancel</button>
-                <button className="roundedButton" type="submit" >Sign Up</button>
+              <Link to="/"><button className="roundedButton" type="button" >Cancel</button></Link>
+              <Link to = "/todos">  <button className="roundedButton" type="submit" >Sign Up</button> </Link>
               </div>
             </div>
           </Grid>

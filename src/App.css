@@ -43,6 +43,7 @@
   border-radius: 6px;
   border: 1px solid #ccc;
   background-color: white;
+  word-wrap: break-word;
 }
 
 input[type=text], select {
@@ -209,6 +210,9 @@ width: 50px;
 
 .leftPosition {
   float: left;
+}
+.rightPosition {
+  float: right;
 }
 
 #filterByTagInputField {
