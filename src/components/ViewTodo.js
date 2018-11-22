@@ -19,16 +19,23 @@ class ViewTodo extends Component {
             editTodoTagTextValue: this.props.todo.tag,
         };
     }
+
+    componentDidUpdate(prevProps) {
+        if (this.props !== prevProps) {
+           this.setState({todo: this.props.todo,
+             todoIndex: this.props.todoIndex,
+            editTodoDescriptionTextValue: this.props.todo.description,
+            editTodoTagTextValue: this.props.todo.tag});
+        }
+      }
   
     handleDescriptionTextChange(event) {
         const editTodoDescriptionTextValue = event.target.value;
         this.setState({ editTodoDescriptionTextValue }, () => { });
-        console.log(this.state.editTodoDescriptionTextValue);
     }
     handleTagTextChange(event) {
         const editTodoTagTextValue = event.target.value;
         this.setState({ editTodoTagTextValue }, () => { });
-        console.log(this.state.editTodoTagTextValue);
     }
 
     applyTodoEdits() {
@@ -42,12 +49,11 @@ class ViewTodo extends Component {
         this.setState({ todo: editedTodo });
         this.props.editTodo(editedTodo, this.state.todoIndex);
     }
+
     deleteTodo() {
         this.props.deleteTodo(this.state.todoIndex);
     }
     markTodoAsDone() {
-        console.log("viewTodo mark as done");
-        // console.log(this.props);
         if (this.state.todo.done === false)
             this.props.markTodoAsDone(this.state.todoIndex);
     }
@@ -58,7 +64,7 @@ class ViewTodo extends Component {
 
     render() {
         const { todo, todoIndex } = this.props;
-        //console.log(this.props);
+        // console.log(this.props, this.state.todo);
         return (
             <div>
                 <div key={todoIndex} id="viewTodoDiv">

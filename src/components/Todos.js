@@ -43,7 +43,6 @@ class Todos extends Component {
   }
 
   filterTodosFun(filterTodoTagTextValue) {
-    console.log("FilterTodos Function: ", filterTodoTagTextValue)
     var allTodos = this.state.allTodos;
     if (filterTodoTagTextValue.length === 0) {
       for (var i = 0; i < allTodos.length; ++i)
@@ -59,7 +58,6 @@ class Todos extends Component {
           allTodos[i].show = true;
         else allTodos[i].show = false;
         this.setState({ allTodos }, () => { });
-        console.log(this.state.allTodos);
       }
     }
   }
@@ -74,7 +72,6 @@ class Todos extends Component {
         color: "#fff",
         show: true,
       }
-      console.log(this.state.addTodoDescriptionValue, this.state.addTodoTagValue)
       var allTodos = this.state.allTodos;
       allTodos.push(newTodo);
       this.setState({ allTodos, addTodoDescriptionValue: '', addTodoTagValue: '' },
@@ -83,42 +80,27 @@ class Todos extends Component {
     else {
       alert("Todo description is required");
     }
-    console.log(this.state.allTodos, this.state.addTodoDescriptionValue, this.state.addTodoTagValue);
   }
   editTodo(editedTodo, todoIndex) {
     var allTodos = this.state.allTodos;
     if (typeof allTodos[todoIndex] !== 'undefined')
       allTodos[todoIndex] = editedTodo;
     this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
-    console.log(this.state.allTodos);
   }
 
   deleteTodo(todoIndex) {
     var allTodos = this.state.allTodos;
-    console.log(todoIndex, allTodos[todoIndex]);
     if (typeof allTodos[todoIndex] !== 'undefined') {
       allTodos.splice(todoIndex, 1);
-      // var newAllTodos = [];
-      // for (var i = 0; i < allTodos.length; ++i) {
-      //   if (i !== todoIndex)
-      //     newAllTodos.push(allTodos[i]);
-      // }
-      // this.setState({
-      //   allTodos: this.state.allTodos.filter((_, j) => j !== toString)
-      // },  () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos))} );
-      this.setState({allTodos});
       this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
-      console.log(this.state.allTodos);
     }
   }
 
   markTodoAsDone(todoIndex) {
-    console.log("todos: markAsDone");
     var allTodos = this.state.allTodos;
     if (typeof allTodos[todoIndex] !== 'undefined')
       allTodos[todoIndex].done = true;
     this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
-    // console.log(this.state.allTodos);
   }
 
   markTodoBackAsOngoing(todoIndex) {
