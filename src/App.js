@@ -11,7 +11,7 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          <h1 className="leftPosition"> Todos App</h1>
+          <h1 id="appTitle" className="leftPosition"> Todos App</h1>
           <div>
             <Route exact path="/" component={Signin} />
             <Route exact path="/todos" component={Todos} />

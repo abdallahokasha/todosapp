@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
+import TextField from '@material-ui/core/TextField';
+import { CompactPicker } from "react-color";
 import ViewTodo from './ViewTodo';
+import SimpleDialog from './SimpleDialog'
+
 
 class Todos extends Component {
   constructor(props) {
@@ -12,17 +16,22 @@ class Todos extends Component {
     this.deleteTodo = this.deleteTodo.bind(this);
     this.handleTabsView = this.handleTabsView.bind(this);
     this.markTodoAsDone = this.markTodoAsDone.bind(this);
+    this.handleDueDateChange = this.handleDueDateChange.bind(this);
     this.handleInputTagChange = this.handleInputTagChange.bind(this);
     this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
     this.markTodoBackAsOngoing = this.markTodoBackAsOngoing.bind(this);
+    this.handleColorPickerModal = this.handleColorPickerModal.bind(this);
     this.handleInputFilterTagChange = this.handleInputFilterTagChange.bind(this);
 
     this.state = {
       viewAllTodosTab: true,
       viewDoneTodosTab: false,
       addTodoTagValue: '',
+      addTodoColor: "#fff",
+      addTodoDueDate: new Date(),
       addTodoDescriptionValue: '',
       filterTodoTagTextValue: '',
+      openColorPickerModal: false,
       allTodos: JSON.parse(localStorage.getItem('allTodos')) || [],
     }
   }
@@ -69,12 +78,14 @@ class Todos extends Component {
         description: this.state.addTodoDescriptionValue,
         tag: this.state.addTodoTagValue,
         done: false,
-        color: "#fff",
+        color: this.state.addTodoColor,
         show: true,
+        dueDate: this.state.addTodoDueDate,
+        doneDate: "",
       }
       var allTodos = this.state.allTodos;
       allTodos.push(newTodo);
-      this.setState({ allTodos, addTodoDescriptionValue: '', addTodoTagValue: '' },
+      this.setState({ allTodos, addTodoDescriptionValue: '', addTodoTagValue: '', addTodoDueDate: "" },
         () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
     }
     else {
@@ -98,8 +109,10 @@ class Todos extends Component {
 
   markTodoAsDone(todoIndex) {
     var allTodos = this.state.allTodos;
-    if (typeof allTodos[todoIndex] !== 'undefined')
+    if (typeof allTodos[todoIndex] !== 'undefined') {
       allTodos[todoIndex].done = true;
+      allTodos[todoIndex].doneDate = Date.now();
+    }
     this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
   }
 
@@ -115,6 +128,17 @@ class Todos extends Component {
       this.setState({ viewAllTodosTab: true, viewDoneTodosTab: false });
     else
       this.setState({ viewAllTodosTab: false, viewDoneTodosTab: true });
+  }
+  handleColorPickerModal(openFlag) {
+    this.setState({ openColorPickerModal: openFlag })
+  }
+  handleColorChange = (color) => {
+    this.setState({ addTodoColor: color.hex });
+    console.log(color.hex);
+  }
+  handleDueDateChange(event) {
+    console.log(event.target.value);
+    this.setState({ addTodoDueDate: event.target.value })
   }
   render() {
     return (
@@ -146,20 +170,31 @@ class Todos extends Component {
               <div>
                 <Grid container spacing={8} direction="row">
                   <Grid item xs={4}>
-                    <div id="addNewTodoDiv">
-                      <textarea required
-                        id="roundedBar"
-                        className="scrollBar noBorder"
-                        placeholder="Description*..."
-                        rows="6" cols="60"
-                        value={this.state.addTodoDescriptionValue}
-                        onChange={this.handleTextFieldChange}
-                      />
-                      <input className="noBorder" placeholder="Tag" type="text" onChange={this.handleInputTagChange} value={this.state.addTodoTagValue} />
-                      <button className="roundedButton todoButtons" onClick={this.addTodo} type="button"> Add </button>
-                    </div>
+                    <Grid container spacing={8} direction="row">
+                      <div id="addNewTodoDiv">
+                        <Grid item xs={12}>
+                          <textarea required
+                            id="roundedBar"
+                            className="scrollBar noBorder"
+                            placeholder="Description*..."
+                            rows="6" cols="60"
+                            value={this.state.addTodoDescriptionValue}
+                            onChange={this.handleTextFieldChange}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <input className="noBorder" placeholder="Tag" type="text" onChange={this.handleInputTagChange} value={this.state.addTodoTagValue} />
+                        </Grid>
+                        <Grid item xs={12}>
+                        <label className="grayColor1 leftPosition"> Due Date </label>
+                        <input className="datetime-input" type="datetime-local" name="dueDate" value={this.state.addTodoDueDate} onChange={this.handleDueDateChange} min={Date.now()} />
+                        </Grid>
+                        <button className="roundedButton todoButtons" onClick={() => { this.handleColorPickerModal(true) }} type="button"> Pick a color </button>
+                        <button className="roundedButton todoButtons" onClick={this.addTodo} type="button"> Add </button>
+                        {this.state.openColorPickerModal ? <SimpleDialog openDialog={this.state.openColorPickerModal} handleDialogClose={this.handleColorPickerModal} dialogContent={<CompactPicker color={this.state.addTodoColor} onChangeComplete={this.handleColorChange} />} dialogTitle={"Choose a color"} /> : null}
+                      </div>
+                    </Grid>
                   </Grid>
-
                   <Grid item xs={4}>
                     <p> On going Todos </p>
                     {this.state.allTodos.map((todo, i) => {

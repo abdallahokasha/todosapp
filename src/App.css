@@ -58,7 +58,7 @@ input[type=text], select {
 
 input[type=text], input[type='password'], select {
   width: 100%;
-  padding: 12px 20px;
+  padding: 11px 11px;
   margin: 8px 0;
   display: inline-block;
   border: 1px solid #ccc;
@@ -224,4 +224,14 @@ width: 70%;
 
 #deleteBtn {
 background-color: red;
+}
+
+.datetime-input {
+width: 90%;
+margin:12px 14px 14px 0px;
+}
+
+#appTitle {
+  font-family: sans-serif;
+  font-style: oblique;
 }
