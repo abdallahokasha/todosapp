@@ -97,7 +97,7 @@ class ViewTodo extends Component {
                             <div>  <label className="grayColor1 leftPosition"> Tag </label>
                                 {todo.tag} </div>
                             <div>  <label className="grayColor1 leftPosition"> Done on </label>
-                                {todo.doneDate()}
+                                {todo.doneDate}
                             </div>
                             <button className="roundedButton todoButtons" onClick={this.markTodoAsOngoing} type="button"> Mark as on going </button>
                         </div>
