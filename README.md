@@ -1,3 +1,29 @@
+
+## Todos app installation
+
+-> Install nodejs
+### `sudo apt install nodejs`
+
+-> Install latest version of node
+### `sudo npm install -g n`
+### `sudo n stable`
+
+-> Install latest version of npm
+### `sudo apt-get install npm`
+### `npm install npm@latest -g`
+
+-> Install create-react-app 
+###  `npm i create-react-app`
+or 
+### `sudo npm i create-react-app`
+
+-> Create app with name "todos" in the current directory
+### `npx create-react-app todos`
+
+ -> Start the server and run the app
+### `cd todo`
+### `npm start`
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
