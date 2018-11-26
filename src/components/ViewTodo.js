@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import TextField from '@material-ui/core/TextField';
 import { CompactPicker } from "react-color";
 import SimpleDialog from './SimpleDialog'
 //var FontAwesome = require('react-fontawesome');
