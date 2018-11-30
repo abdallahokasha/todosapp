@@ -7,6 +7,7 @@ import * as serviceWorker from './serviceWorker';
 import configureStore from './store/configureStore';
 
 const store = configureStore;
+console.log(store);
 ReactDOM.render(<Provider store={store}>   
  <App />
 </Provider>, document.getElementById('root'));

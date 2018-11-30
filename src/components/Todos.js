@@ -6,6 +6,7 @@ import ViewTodo from './ViewTodo';
 import SimpleDialog from './SimpleDialog'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 
 import * as todoActions from '../actions/todoActions';
 
@@ -256,7 +257,8 @@ function mapStateToProps(state) {
  function mapDispatchToProps(dispatch) {
   return bindActionCreators(todoActions, dispatch);
 }
- 
- export default connect(mapStateToProps, mapDispatchToProps)(Todos);
-// export default connect()(Todos);
+Todos.contextTypes = { store: PropTypes.object };
+//var connectedTodos = connect(mapStateToProps, mapDispatchToProps)(Todos);
+//  export default connect(mapStateToProps, mapDispatchToProps)(Todos);
+export default connect()(Todos);
 // export default Todos;
