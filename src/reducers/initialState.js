@@ -1,3 +1,5 @@
 export default {
-    allTodos: []
-  };
+  todos: {
+    allTodos: JSON.parse(localStorage.getItem('allTodos')) || [],
+  }
+};

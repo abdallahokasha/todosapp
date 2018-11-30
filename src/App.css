@@ -235,3 +235,7 @@ margin:12px 14px 14px 0px;
   font-family: sans-serif;
   font-style: oblique;
 }
+
+#logoutTextLink {
+margin: 0px;
+}

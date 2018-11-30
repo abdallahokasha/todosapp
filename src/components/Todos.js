@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
-import TextField from '@material-ui/core/TextField';
 import { CompactPicker } from "react-color";
 import ViewTodo from './ViewTodo';
 import SimpleDialog from './SimpleDialog'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
+import * as todoActions from '../actions/todoActions';
 
 class Todos extends Component {
   constructor(props) {
@@ -33,6 +35,7 @@ class Todos extends Component {
       filterTodoTagTextValue: '',
       openColorPickerModal: false,
       allTodos: JSON.parse(localStorage.getItem('allTodos')) || [],
+
     }
   }
 
@@ -72,6 +75,7 @@ class Todos extends Component {
   }
 
   addTodo() {
+    alert('add_todos');
     const addTodoDescriptionValue = this.state.addTodoDescriptionValue;
     if (addTodoDescriptionValue.length) {
       var newTodo = {
@@ -141,9 +145,10 @@ class Todos extends Component {
     this.setState({ addTodoDueDate: event.target.value })
   }
   render() {
+    console.log(this.props, this.context)
     return (
       <div>
-        <Link to="/"><p className="rightPosition"> Logout</p></Link>
+        <Link to="/"><p className="rightPosition" id="logoutTextLink"> Logout</p></Link>
         <Grid direction="column" spacing={8} container>
           <Grid item xs={12}>
             <Grid spacing={0} container direction="row" justify="flex-start" alignItems="flex-start">
@@ -242,4 +247,16 @@ class Todos extends Component {
   }
 }
 
-export default Todos;
+function mapStateToProps(state) {
+  return {
+    allTodos: state.allTodos,
+  };
+}
+
+ function mapDispatchToProps(dispatch) {
+  return bindActionCreators(todoActions, dispatch);
+}
+ 
+ export default connect(mapStateToProps, mapDispatchToProps)(Todos);
+// export default connect()(Todos);
+// export default Todos;

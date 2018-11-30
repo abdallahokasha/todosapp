@@ -4,7 +4,8 @@ import {
     MARK_AS_DONE, MARK_AS_ONGOING
 } from '../actions/actionTypes';
 
-export default function todo(state = initialState.allTodos, action) {
+export default function todos(state = initialState.todos.allTodos, action) {
+    console.log(state, action);
     let newState;
     switch (action.type) {
         case ADD_TODO:
