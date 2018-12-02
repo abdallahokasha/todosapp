@@ -85,7 +85,7 @@ class ViewTodo extends Component {
     }
     render() {
         const { todo, todoIndex } = this.props;
-        console.log(this.props, this.state.todo);
+        // console.log(this.props, this.state.todo);
         return (
             <div>
                 <div key={todoIndex} id="viewTodoDiv" style={{ backgroundColor: `${todo.color}` }}>

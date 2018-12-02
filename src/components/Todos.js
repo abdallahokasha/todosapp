@@ -5,10 +5,11 @@ import { CompactPicker } from "react-color";
 import ViewTodo from './ViewTodo';
 import SimpleDialog from './SimpleDialog'
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-
-import * as todoActions from '../actions/todoActions';
+import {
+  addTodo, editTodo, deleteTodo, markTodoAsDone,
+  markTodoAsOnGoing
+} from '../actions/todoActions';
 
 class Todos extends Component {
   constructor(props) {
@@ -35,8 +36,6 @@ class Todos extends Component {
       addTodoDescriptionValue: '',
       filterTodoTagTextValue: '',
       openColorPickerModal: false,
-      allTodos: JSON.parse(localStorage.getItem('allTodos')) || [],
-
     }
   }
 
@@ -56,76 +55,88 @@ class Todos extends Component {
   }
 
   filterTodosFun(filterTodoTagTextValue) {
-    var allTodos = this.state.allTodos;
-    if (filterTodoTagTextValue.length === 0) {
-      for (var i = 0; i < allTodos.length; ++i)
-        allTodos[i].show = true;
-      this.setState({ allTodos });
-    }
-    else {
-      for (var i = 0; i < allTodos.length; ++i) {
-        var tagInLowerCase = allTodos[i].tag.toLowerCase();
-        var filterTodoTagTextValueLowerCase = filterTodoTagTextValue.toLowerCase();
+    // var allTodos = this.state.allTodos;
+    // if (filterTodoTagTextValue.length === 0) {
+    //   for (var i = 0; i < allTodos.length; ++i)
+    //     allTodos[i].show = true;
+    //   this.setState({ allTodos });
+    // }
+    // else {
+    //   for (var i = 0; i < allTodos.length; ++i) {
+    //     var tagInLowerCase = allTodos[i].tag.toLowerCase();
+    //     var filterTodoTagTextValueLowerCase = filterTodoTagTextValue.toLowerCase();
 
-        if (tagInLowerCase.includes(filterTodoTagTextValueLowerCase) === true)
-          allTodos[i].show = true;
-        else allTodos[i].show = false;
-        this.setState({ allTodos }, () => { });
-      }
-    }
+    //     if (tagInLowerCase.includes(filterTodoTagTextValueLowerCase) === true)
+    //       allTodos[i].show = true;
+    //     else allTodos[i].show = false;
+    //     this.setState({ allTodos }, () => { });
+    //   }
+    // }
   }
 
   addTodo() {
-    alert('add_todos');
     const addTodoDescriptionValue = this.state.addTodoDescriptionValue;
     if (addTodoDescriptionValue.length) {
       var newTodo = {
         description: this.state.addTodoDescriptionValue,
         tag: this.state.addTodoTagValue,
-        done: false,
-        color: this.state.addTodoColor,
-        show: true,
         dueDate: this.state.addTodoDueDate,
         doneDate: "",
+        show: true,
+        done: false,
+        color: this.state.addTodoColor,
       }
-      var allTodos = this.state.allTodos;
-      allTodos.push(newTodo);
-      this.setState({ allTodos, addTodoDescriptionValue: '', addTodoTagValue: '', addTodoDueDate: "" },
-        () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+      this.props.dispatch({ type: 'ADD_TODO', newTodo: newTodo });
+      localStorage.setItem('allTodos', JSON.stringify(this.context.store.getState().todos.allTodos))
+      console.log(this.context.store.getState().todos.allTodos);
+      this.setState({  addTodoDescriptionValue: '', addTodoTagValue: '', addTodoDueDate: "" });
     }
     else {
       alert("Todo description is required");
     }
   }
   editTodo(editedTodo, todoIndex) {
-    var allTodos = this.state.allTodos;
-    if (typeof allTodos[todoIndex] !== 'undefined')
+    var allTodos = this.context.store.getState().todos.allTodos;
+    if (typeof allTodos[todoIndex] !== 'undefined'){
       allTodos[todoIndex] = editedTodo;
-    this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
-  }
+      this.props.dispatch({ type: 'EDIT_TODO', todoIndex: todoIndex, editedTodo: editedTodo });
+      localStorage.setItem('allTodos', JSON.stringify(this.context.store.getState().todos.allTodos))
+      console.log(this.context.store.getState().todos.allTodos);
+      // this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+  }}
 
   deleteTodo(todoIndex) {
-    var allTodos = this.state.allTodos;
+    var allTodos = this.context.store.getState().todos.allTodos;
+    console.log(this.context.store.getState().todos.allTodos);
     if (typeof allTodos[todoIndex] !== 'undefined') {
-      allTodos.splice(todoIndex, 1);
-      this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+      this.props.dispatch({ type: 'DELETE_TODO', todoIndex: todoIndex });
+      localStorage.setItem('allTodos', JSON.stringify(this.context.store.getState().todos.allTodos))
+      console.log(this.context.store.getState().todos.allTodos);
+      // allTodos.splice(todoIndex, 1);
+      // this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
     }
   }
 
   markTodoAsDone(todoIndex) {
-    var allTodos = this.state.allTodos;
+    var allTodos = this.context.store.getState().todos.allTodos;
     if (typeof allTodos[todoIndex] !== 'undefined') {
       allTodos[todoIndex].done = true;
       allTodos[todoIndex].doneDate = Date.now();
+      this.context.store.dispatch({ type: 'MARK_TODO_AS_DONE', todoIndex: todoIndex });
+      //console.log(this.context.store.getState().todos.allTodos);
+      localStorage.setItem('allTodos', JSON.stringify(this.context.store.getState().todos.allTodos))
     }
-    this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
   }
 
   markTodoBackAsOngoing(todoIndex) {
-    var allTodos = this.state.allTodos;
-    if (typeof allTodos[todoIndex] !== 'undefined')
+    var allTodos = this.context.store.getState().todos.allTodos;
+    if (typeof allTodos[todoIndex] !== 'undefined') {
       allTodos[todoIndex].done = false;
-    this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+      allTodos[todoIndex].doneDate = '';
+      this.context.store.dispatch({ type: 'MARK_TODO_AS_ONGOING', todoIndex: todoIndex });
+      localStorage.setItem('allTodos', JSON.stringify(this.context.store.getState().todos.allTodos))
+      // this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+    }
   }
 
   handleTabsView(tabName) {
@@ -146,7 +157,9 @@ class Todos extends Component {
     this.setState({ addTodoDueDate: event.target.value })
   }
   render() {
-    console.log(this.props, this.context)
+    // console.log(this.props, this.context)
+    var allTodos = this.context.store.getState().todos.allTodos;
+    console.log(allTodos);
     return (
       <div>
         <Link to="/"><p className="rightPosition" id="logoutTextLink"> Logout</p></Link>
@@ -192,8 +205,8 @@ class Todos extends Component {
                           <input className="noBorder" placeholder="Tag" type="text" onChange={this.handleInputTagChange} value={this.state.addTodoTagValue} />
                         </Grid>
                         <Grid item xs={12}>
-                        <label className="grayColor1 leftPosition"> Due Date </label>
-                        <input className="datetime-input" type="datetime-local" name="dueDate" value={this.state.addTodoDueDate} onChange={this.handleDueDateChange} min={Date.now()} />
+                          <label className="grayColor1 leftPosition"> Due Date </label>
+                          <input className="datetime-input" type="datetime-local" name="dueDate" value={this.state.addTodoDueDate} onChange={this.handleDueDateChange} min={Date.now()} />
                         </Grid>
                         <button className="roundedButton todoButtons" onClick={() => { this.handleColorPickerModal(true) }} type="button"> Pick a color </button>
                         <button className="roundedButton todoButtons" onClick={this.addTodo} type="button"> Add </button>
@@ -203,7 +216,7 @@ class Todos extends Component {
                   </Grid>
                   <Grid item xs={4}>
                     <p> On going Todos </p>
-                    {this.state.allTodos.map((todo, i) => {
+                    {allTodos.map((todo, i) => {
                       return (
                         <div key={i}>
                           {todo.done || !todo.show ? null : <ViewTodo todo={todo} todoIndex={i}
@@ -216,7 +229,7 @@ class Todos extends Component {
                   </Grid>
                   <Grid item xs={4}>
                     <p> Done Todos </p>
-                    {this.state.allTodos.map((todo, i) => {
+                    {allTodos.map((todo, i) => {
                       return (
                         <div key={i}>
                           {!todo.done || !todo.show ? null : <ViewTodo todo={todo} todoIndex={i}
@@ -230,7 +243,7 @@ class Todos extends Component {
                   <Grid item xs={4}> </Grid>
                   <Grid item xs={4}>
                     <p> Done Todos </p>
-                    {this.state.allTodos.map((todo, i) => {
+                    {allTodos.map((todo, i) => {
                       return (
                         <div key={i}>
                           {!todo.done || !todo.show ? null : <ViewTodo todo={todo} todoIndex={i}
@@ -248,17 +261,7 @@ class Todos extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    allTodos: state.allTodos,
-  };
-}
 
- function mapDispatchToProps(dispatch) {
-  return bindActionCreators(todoActions, dispatch);
-}
-Todos.contextTypes = { store: PropTypes.object };
-//var connectedTodos = connect(mapStateToProps, mapDispatchToProps)(Todos);
-//  export default connect(mapStateToProps, mapDispatchToProps)(Todos);
 export default connect()(Todos);
-// export default Todos;
+Todos.contextTypes = { store: PropTypes.object };
+

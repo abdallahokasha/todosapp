@@ -1,29 +1,17 @@
 //add new todo
-export function addTodo(description, tag, dueDate, doneDate, show, done, color) {
+export function addTodo(newTodo) {
     return {
         type: 'ADD_TODO',
-        description,
-        tag,
-        dueDate,
-        doneDate,
-        show,
-        done,
-        color
+        newTodo
     }
 }
 
 // edit todo
-export function editTodo(todoIndex, description, tag, dueDate, doneDate, show, done, color) {
+export function editTodo(todoIndex, editedTodo) {
     return {
         type: 'EDIT_TODO',
         todoIndex,
-        description,
-        tag,
-        dueDate,
-        doneDate,
-        show,
-        done,
-        color
+        editedTodo
     }
 }
 
@@ -39,7 +27,7 @@ export function deleteTodo(todoIndex) {
 export function markTodoAsDone(todoIndex) {
     return {
         type: 'MARK_TODO_AS_DONE',
-        todoIndex
+        todoIndex,
     }
 }
 
@@ -47,7 +35,7 @@ export function markTodoAsDone(todoIndex) {
 export function markTodoAsOnGoing(todoIndex) {
     return {
         type: 'MARK_TODO_AS_ONGOING',
-        todoIndex
+        todoIndex,
     }
 }
 
