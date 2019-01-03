@@ -1,5 +1,5 @@
 
-### Guide for Running the App on Linux
+### Guide for running the app on Linux
 
 If You don't have nodejs, npm or create-react-app installed you can follow the steps [here](https://gist.github.com/abdallahokasha/5e506c87e03453977f4f9d42929e183d "https://gist.github.com/abdallahokasha/5e506c87e03453977f4f9d42929e183d")
 
@@ -7,18 +7,18 @@ If You don't have nodejs, npm or create-react-app installed you can follow the s
 
 `sudo apt install git-all`
 
-#### Now, clone the App
+#### Now, clone the app
 `git clone https://github.com/abdallahokasha/TodosApp.git`
 
-#### you can also clone the master branch 
+#### You can also clone the 'master' branch 
 `git clone -b master https://github.com/abdallahokasha/TodosApp.git`
 
-#### and then go for the app directory
+#### And then go for the app directory
 `cd TodosApp`
 
 #### Install app dependencies using 
 `npm install`
 
-#### now, run the serve
+#### now, run the server
 `npm start`
 
