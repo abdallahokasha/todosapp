@@ -16,6 +16,9 @@ If You don't have nodejs, npm or create-react-app installed you can follow the s
 #### and then go for the app directory
 `cd TodosApp`
 
+#### Install app dependencies using 
+`npm install`
+
 #### now, run the serve
 `npm start`
 
