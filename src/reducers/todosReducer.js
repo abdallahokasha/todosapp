@@ -40,7 +40,7 @@ export default function todos(state = initialState.todos.allTodos, action) {
             return {
                 allTodos: [
                     ...state.allTodos.slice(0, i),
-                    { ...state.allTodos[i], done: true, doneDate: Date.now() },
+                    { ...state.allTodos[i], done: true, doneDate: new Date(Date.now()) },
                     ...state.allTodos.slice(i + 1)]
             };
 

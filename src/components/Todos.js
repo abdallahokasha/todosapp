@@ -105,7 +105,7 @@ class Todos extends Component {
     if (typeof allTodos[todoIndex] !== 'undefined') {
       allTodos[todoIndex] = editedTodo;
       this.props.dispatch({ type: 'EDIT_TODO', todoIndex: todoIndex, editedTodo: editedTodo });
-      console.log(this.context.store.getState().todos.allTodos);
+      //console.log(this.context.store.getState().todos.allTodos);
       this.setState({ allTodos: this.context.store.getState().todos.allTodos },
         () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
     }
@@ -116,7 +116,7 @@ class Todos extends Component {
     console.log(this.context.store.getState().todos.allTodos);
     if (typeof allTodos[todoIndex] !== 'undefined') {
       this.props.dispatch({ type: 'DELETE_TODO', todoIndex: todoIndex });
-      console.log(this.context.store.getState().todos.allTodos);
+      //console.log(this.context.store.getState().todos.allTodos);
       this.setState({ allTodos: this.context.store.getState().todos.allTodos },
         () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
     }
@@ -125,8 +125,6 @@ class Todos extends Component {
   markTodoAsDone(todoIndex) {
     var allTodos = this.context.store.getState().todos.allTodos;
     if (typeof allTodos[todoIndex] !== 'undefined') {
-      allTodos[todoIndex].done = true;
-      allTodos[todoIndex].doneDate = Date.now();
       this.context.store.dispatch({ type: 'MARK_TODO_AS_DONE', todoIndex: todoIndex });
       console.log(this.context.store.getState().todos.allTodos);
       this.setState({ allTodos: this.context.store.getState().todos.allTodos },
@@ -138,12 +136,8 @@ class Todos extends Component {
     var allTodos = this.context.store.getState().todos.allTodos;
     console.log(allTodos);
     if (typeof allTodos[todoIndex] !== 'undefined') {
-      allTodos[todoIndex].done = false;
-      allTodos[todoIndex].doneDate = '';
       this.context.store.dispatch({ type: 'MARK_TODO_AS_ONGOING', todoIndex: todoIndex });
-
-      localStorage.setItem('allTodos', JSON.stringify(this.context.store.getState().todos.allTodos))
-      console.log(this.context.store.getState().todos.allTodos);
+      //console.log(this.context.store.getState().todos.allTodos);
       this.setState({ allTodos: this.context.store.getState().todos.allTodos },
         () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
     }
@@ -216,7 +210,7 @@ class Todos extends Component {
                         </Grid>
                         <Grid item xs={12}>
                           <label className="grayColor1 leftPosition"> Due Date </label>
-                          <input className="datetime-input" type="datetime-local" name="dueDate" value={this.state.addTodoDueDate} onChange={this.handleDueDateChange} min={Date.now()} />
+                          <input className="datetime-input" type="datetime-local" name="dueDate" value={String(this.state.addTodoDueDate)} onChange={this.handleDueDateChange} min={Date.now()} />
                         </Grid>
                         <button className="roundedButton todoButtons" onClick={() => { this.handleColorPickerModal(true) }} type="button"> Pick a color </button>
                         <button className="roundedButton todoButtons" onClick={this.addTodo} type="button"> Add </button>
