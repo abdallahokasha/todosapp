@@ -36,6 +36,7 @@ class Todos extends Component {
       addTodoDescriptionValue: '',
       filterTodoTagTextValue: '',
       openColorPickerModal: false,
+      allTodos: [],
     }
   }
 
@@ -55,23 +56,23 @@ class Todos extends Component {
   }
 
   filterTodosFun(filterTodoTagTextValue) {
-    // var allTodos = this.state.allTodos;
-    // if (filterTodoTagTextValue.length === 0) {
-    //   for (var i = 0; i < allTodos.length; ++i)
-    //     allTodos[i].show = true;
-    //   this.setState({ allTodos });
-    // }
-    // else {
-    //   for (var i = 0; i < allTodos.length; ++i) {
-    //     var tagInLowerCase = allTodos[i].tag.toLowerCase();
-    //     var filterTodoTagTextValueLowerCase = filterTodoTagTextValue.toLowerCase();
+    var allTodos = this.state.allTodos;
+    if (filterTodoTagTextValue.length === 0) {
+      for (var i = 0; i < allTodos.length; ++i)
+        allTodos[i].show = true;
+      this.setState({ allTodos });
+    }
+    else {
+      for (var i = 0; i < allTodos.length; ++i) {
+        var tagInLowerCase = allTodos[i].tag.toLowerCase();
+        var filterTodoTagTextValueLowerCase = filterTodoTagTextValue.toLowerCase();
 
-    //     if (tagInLowerCase.includes(filterTodoTagTextValueLowerCase) === true)
-    //       allTodos[i].show = true;
-    //     else allTodos[i].show = false;
-    //     this.setState({ allTodos }, () => { });
-    //   }
-    // }
+        if (tagInLowerCase.includes(filterTodoTagTextValueLowerCase) === true)
+          allTodos[i].show = true;
+        else allTodos[i].show = false;
+        this.setState({ allTodos }, () => { });
+      }
+    }
   }
 
   addTodo() {
@@ -89,7 +90,11 @@ class Todos extends Component {
       this.props.dispatch({ type: 'ADD_TODO', newTodo: newTodo });
       localStorage.setItem('allTodos', JSON.stringify(this.context.store.getState().todos.allTodos))
       console.log(this.context.store.getState().todos.allTodos);
-      this.setState({  addTodoDescriptionValue: '', addTodoTagValue: '', addTodoDueDate: "" });
+      this.setState({
+        allTodos: this.context.store.getState().todos.allTodos,
+        addTodoDescriptionValue: '', addTodoTagValue: '', addTodoDueDate: ''
+      },
+        () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
     }
     else {
       alert("Todo description is required");
@@ -97,23 +102,23 @@ class Todos extends Component {
   }
   editTodo(editedTodo, todoIndex) {
     var allTodos = this.context.store.getState().todos.allTodos;
-    if (typeof allTodos[todoIndex] !== 'undefined'){
+    if (typeof allTodos[todoIndex] !== 'undefined') {
       allTodos[todoIndex] = editedTodo;
       this.props.dispatch({ type: 'EDIT_TODO', todoIndex: todoIndex, editedTodo: editedTodo });
-      localStorage.setItem('allTodos', JSON.stringify(this.context.store.getState().todos.allTodos))
       console.log(this.context.store.getState().todos.allTodos);
-      // this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
-  }}
+      this.setState({ allTodos: this.context.store.getState().todos.allTodos },
+        () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+    }
+  }
 
   deleteTodo(todoIndex) {
     var allTodos = this.context.store.getState().todos.allTodos;
     console.log(this.context.store.getState().todos.allTodos);
     if (typeof allTodos[todoIndex] !== 'undefined') {
       this.props.dispatch({ type: 'DELETE_TODO', todoIndex: todoIndex });
-      localStorage.setItem('allTodos', JSON.stringify(this.context.store.getState().todos.allTodos))
       console.log(this.context.store.getState().todos.allTodos);
-      // allTodos.splice(todoIndex, 1);
-      // this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+      this.setState({ allTodos: this.context.store.getState().todos.allTodos },
+        () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
     }
   }
 
@@ -123,19 +128,24 @@ class Todos extends Component {
       allTodos[todoIndex].done = true;
       allTodos[todoIndex].doneDate = Date.now();
       this.context.store.dispatch({ type: 'MARK_TODO_AS_DONE', todoIndex: todoIndex });
-      //console.log(this.context.store.getState().todos.allTodos);
-      localStorage.setItem('allTodos', JSON.stringify(this.context.store.getState().todos.allTodos))
+      console.log(this.context.store.getState().todos.allTodos);
+      this.setState({ allTodos: this.context.store.getState().todos.allTodos },
+        () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
     }
   }
 
   markTodoBackAsOngoing(todoIndex) {
     var allTodos = this.context.store.getState().todos.allTodos;
+    console.log(allTodos);
     if (typeof allTodos[todoIndex] !== 'undefined') {
       allTodos[todoIndex].done = false;
       allTodos[todoIndex].doneDate = '';
       this.context.store.dispatch({ type: 'MARK_TODO_AS_ONGOING', todoIndex: todoIndex });
+
       localStorage.setItem('allTodos', JSON.stringify(this.context.store.getState().todos.allTodos))
-      // this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+      console.log(this.context.store.getState().todos.allTodos);
+      this.setState({ allTodos: this.context.store.getState().todos.allTodos },
+        () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
     }
   }
 
@@ -158,8 +168,8 @@ class Todos extends Component {
   }
   render() {
     // console.log(this.props, this.context)
-    var allTodos = this.context.store.getState().todos.allTodos;
-    console.log(allTodos);
+    const allTodos = this.context.store.getState().todos.allTodos;
+    //console.log(allTodos);
     return (
       <div>
         <Link to="/"><p className="rightPosition" id="logoutTextLink"> Logout</p></Link>

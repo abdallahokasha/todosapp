@@ -1,6 +1,6 @@
 export default {
   todos: {
-    // allTodos: JSON.parse(localStorage.getItem('allTodos')),
-    allTodos: [],
+    allTodos: JSON.parse(localStorage.getItem('allTodos')),
+    // allTodos: [],
   }
 };
