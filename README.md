@@ -1,6 +1,6 @@
 ### Demo
 
-[**TodosApp**]("https://todos-8cf89.firebaseapp.com/todos") is deployed on firebase.
+[**TodosApp**](https://todos-8cf89.firebaseapp.com/todos "https://todos-8cf89.firebaseapp.com/todos") is deployed on firebase.
 
 ### Guide for running the app on Linux
 
