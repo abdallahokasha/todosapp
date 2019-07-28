@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import TextField from '@material-ui/core/TextField';
 import { CompactPicker } from "react-color";
 import SimpleDialog from './SimpleDialog'
 //var FontAwesome = require('react-fontawesome');
@@ -86,7 +85,7 @@ class ViewTodo extends Component {
     }
     render() {
         const { todo, todoIndex } = this.props;
-        console.log(this.props, this.state.todo);
+        console.log(this.props.todo.doneDate, this.state.todo);
         return (
             <div>
                 <div key={todoIndex} id="viewTodoDiv" style={{ backgroundColor: `${todo.color}` }}>
@@ -97,7 +96,8 @@ class ViewTodo extends Component {
                             <div>  <label className="grayColor1 leftPosition"> Tag </label>
                                 {todo.tag} </div>
                             <div>  <label className="grayColor1 leftPosition"> Done on </label>
-                                {todo.doneDate}
+                            <input className="datetime-input" type="datetime-local" name="doneDate" value={String(todo.doneDate)}  disabled/>
+
                             </div>
                             <button className="roundedButton todoButtons" onClick={this.markTodoAsOngoing} type="button"> Mark as on going </button>
                         </div>
@@ -115,7 +115,7 @@ class ViewTodo extends Component {
                             <p className="grayColor1 leftPosition"> Tag </p>
                             <input className="noBorder" placeholder="Tag" type="text" onChange={this.handleTagTextChange} value={this.state.editTodoTagTextValue} />
                             <p className="grayColor1 leftPosition"> Due Date </p>
-                            <input className="datetime-input" type="datetime-local" name="dueDate" value={this.state.editTodoDueDate} onChange={this.handleDueDateChange} min={Date.now()} />
+                            <input className="datetime-input" type="datetime-local" name="dueDate" value={String(this.state.editTodoDueDate)} onChange={this.handleDueDateChange} min={Date.now()} />
 
                             <button className="roundedButton todoButtons" onClick={() => { this.handleColorPickerModal(true) }} type="button"> Pick a color </button>
                             {this.state.openColorPickerModal ? <SimpleDialog openDialog={this.state.openColorPickerModal} handleDialogClose={this.handleColorPickerModal} dialogContent={<CompactPicker color={this.state.editTodoColor} onChangeComplete={this.handleColorChange} />} dialogTitle={"Choose a color"} /> : null}

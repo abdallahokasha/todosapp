@@ -11,7 +11,12 @@
 # production
 /build
 
+#deploy
+/.firbase
+
 # misc
+/.vscode
+
 .DS_Store
 .env.local
 .env.development.local

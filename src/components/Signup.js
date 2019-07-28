@@ -15,18 +15,18 @@ class Signup extends Component {
             <div id="signupDiv">
               <p>Please fill in this form to create an account.</p>
 
-              <label className = "leftPosition" for="email"><b>Email</b></label>
+              <label className = "leftPosition"><b>Email</b></label>
               <input type="text" placeholder="Enter Email" name="email" required />
 
-              <label className = "leftPosition" for="psw"><b>Password</b></label>
+              <label className = "leftPosition"><b>Password</b></label>
               <input type="password" placeholder="Enter Password" name="psw" required />
 
-              <label className = "leftPosition" for="psw-repeat"><b>Confirm Password</b></label>
+              <label className = "leftPosition" htmlFor="psw-repeat"><b>Confirm Password</b></label>
               <input type="password" placeholder="Confirm Password" name="psw-repeat" required />
    
               <label>
-                <input type="checkbox" checked="checked" name="remember" /> Remember me</label>
-              <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
+                <input type="checkbox" name="remember" defaultChecked /> Remember me</label>
+              <p>By creating an account you agree to our <a>Terms & Privacy</a>.</p>
 
               <div >
               <Link to="/"><button className="roundedButton" type="button" >Cancel</button></Link>

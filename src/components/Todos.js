@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
-import TextField from '@material-ui/core/TextField';
 import { CompactPicker } from "react-color";
 import ViewTodo from './ViewTodo';
 import SimpleDialog from './SimpleDialog'
-
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import {
+  addTodo, editTodo, deleteTodo, markTodoAsDone,
+  markTodoAsOnGoing
+} from '../actions/todoActions';
 
 class Todos extends Component {
   constructor(props) {
@@ -32,7 +36,7 @@ class Todos extends Component {
       addTodoDescriptionValue: '',
       filterTodoTagTextValue: '',
       openColorPickerModal: false,
-      allTodos: JSON.parse(localStorage.getItem('allTodos')) || [],
+      allTodos: [],
     }
   }
 
@@ -77,15 +81,19 @@ class Todos extends Component {
       var newTodo = {
         description: this.state.addTodoDescriptionValue,
         tag: this.state.addTodoTagValue,
-        done: false,
-        color: this.state.addTodoColor,
-        show: true,
         dueDate: this.state.addTodoDueDate,
         doneDate: "",
+        show: true,
+        done: false,
+        color: this.state.addTodoColor,
       }
-      var allTodos = this.state.allTodos;
-      allTodos.push(newTodo);
-      this.setState({ allTodos, addTodoDescriptionValue: '', addTodoTagValue: '', addTodoDueDate: "" },
+      this.props.dispatch({ type: 'ADD_TODO', newTodo: newTodo });
+      localStorage.setItem('allTodos', JSON.stringify(this.context.store.getState().todos.allTodos))
+      console.log(this.context.store.getState().todos.allTodos);
+      this.setState({
+        allTodos: this.context.store.getState().todos.allTodos,
+        addTodoDescriptionValue: '', addTodoTagValue: '', addTodoDueDate: ''
+      },
         () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
     }
     else {
@@ -93,34 +101,46 @@ class Todos extends Component {
     }
   }
   editTodo(editedTodo, todoIndex) {
-    var allTodos = this.state.allTodos;
-    if (typeof allTodos[todoIndex] !== 'undefined')
+    var allTodos = this.context.store.getState().todos.allTodos;
+    if (typeof allTodos[todoIndex] !== 'undefined') {
       allTodos[todoIndex] = editedTodo;
-    this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+      this.props.dispatch({ type: 'EDIT_TODO', todoIndex: todoIndex, editedTodo: editedTodo });
+      //console.log(this.context.store.getState().todos.allTodos);
+      this.setState({ allTodos: this.context.store.getState().todos.allTodos },
+        () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+    }
   }
 
   deleteTodo(todoIndex) {
-    var allTodos = this.state.allTodos;
+    var allTodos = this.context.store.getState().todos.allTodos;
+    console.log(this.context.store.getState().todos.allTodos);
     if (typeof allTodos[todoIndex] !== 'undefined') {
-      allTodos.splice(todoIndex, 1);
-      this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+      this.props.dispatch({ type: 'DELETE_TODO', todoIndex: todoIndex });
+      //console.log(this.context.store.getState().todos.allTodos);
+      this.setState({ allTodos: this.context.store.getState().todos.allTodos },
+        () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
     }
   }
 
   markTodoAsDone(todoIndex) {
-    var allTodos = this.state.allTodos;
+    var allTodos = this.context.store.getState().todos.allTodos;
     if (typeof allTodos[todoIndex] !== 'undefined') {
-      allTodos[todoIndex].done = true;
-      allTodos[todoIndex].doneDate = Date.now();
+      this.context.store.dispatch({ type: 'MARK_TODO_AS_DONE', todoIndex: todoIndex });
+      console.log(this.context.store.getState().todos.allTodos);
+      this.setState({ allTodos: this.context.store.getState().todos.allTodos },
+        () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
     }
-    this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
   }
 
   markTodoBackAsOngoing(todoIndex) {
-    var allTodos = this.state.allTodos;
-    if (typeof allTodos[todoIndex] !== 'undefined')
-      allTodos[todoIndex].done = false;
-    this.setState({ allTodos }, () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+    var allTodos = this.context.store.getState().todos.allTodos;
+    console.log(allTodos);
+    if (typeof allTodos[todoIndex] !== 'undefined') {
+      this.context.store.dispatch({ type: 'MARK_TODO_AS_ONGOING', todoIndex: todoIndex });
+      //console.log(this.context.store.getState().todos.allTodos);
+      this.setState({ allTodos: this.context.store.getState().todos.allTodos },
+        () => { localStorage.setItem('allTodos', JSON.stringify(this.state.allTodos)) });
+    }
   }
 
   handleTabsView(tabName) {
@@ -141,9 +161,12 @@ class Todos extends Component {
     this.setState({ addTodoDueDate: event.target.value })
   }
   render() {
+    // console.log(this.props, this.context)
+    const allTodos = this.context.store.getState().todos.allTodos;
+    //console.log(allTodos);
     return (
       <div>
-        <Link to="/"><p className="rightPosition"> Logout</p></Link>
+        <Link to="/"><p className="rightPosition" id="logoutTextLink"> Logout</p></Link>
         <Grid direction="column" spacing={8} container>
           <Grid item xs={12}>
             <Grid spacing={0} container direction="row" justify="flex-start" alignItems="flex-start">
@@ -186,8 +209,8 @@ class Todos extends Component {
                           <input className="noBorder" placeholder="Tag" type="text" onChange={this.handleInputTagChange} value={this.state.addTodoTagValue} />
                         </Grid>
                         <Grid item xs={12}>
-                        <label className="grayColor1 leftPosition"> Due Date </label>
-                        <input className="datetime-input" type="datetime-local" name="dueDate" value={this.state.addTodoDueDate} onChange={this.handleDueDateChange} min={Date.now()} />
+                          <label className="grayColor1 leftPosition"> Due Date </label>
+                          <input className="datetime-input" type="datetime-local" name="dueDate" value={String(this.state.addTodoDueDate)} onChange={this.handleDueDateChange} min={Date.now()} />
                         </Grid>
                         <button className="roundedButton todoButtons" onClick={() => { this.handleColorPickerModal(true) }} type="button"> Pick a color </button>
                         <button className="roundedButton todoButtons" onClick={this.addTodo} type="button"> Add </button>
@@ -197,7 +220,7 @@ class Todos extends Component {
                   </Grid>
                   <Grid item xs={4}>
                     <p> On going Todos </p>
-                    {this.state.allTodos.map((todo, i) => {
+                    {allTodos.map((todo, i) => {
                       return (
                         <div key={i}>
                           {todo.done || !todo.show ? null : <ViewTodo todo={todo} todoIndex={i}
@@ -210,7 +233,7 @@ class Todos extends Component {
                   </Grid>
                   <Grid item xs={4}>
                     <p> Done Todos </p>
-                    {this.state.allTodos.map((todo, i) => {
+                    {allTodos.map((todo, i) => {
                       return (
                         <div key={i}>
                           {!todo.done || !todo.show ? null : <ViewTodo todo={todo} todoIndex={i}
@@ -224,7 +247,7 @@ class Todos extends Component {
                   <Grid item xs={4}> </Grid>
                   <Grid item xs={4}>
                     <p> Done Todos </p>
-                    {this.state.allTodos.map((todo, i) => {
+                    {allTodos.map((todo, i) => {
                       return (
                         <div key={i}>
                           {!todo.done || !todo.show ? null : <ViewTodo todo={todo} todoIndex={i}
@@ -242,4 +265,7 @@ class Todos extends Component {
   }
 }
 
-export default Todos;
+
+export default connect()(Todos);
+Todos.contextTypes = { store: PropTypes.object };
+
