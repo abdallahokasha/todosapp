@@ -1,5 +1,6 @@
 {
   "projects": {
-    "todosapp": "todos-8cf89"
+    "todosapp": "todos-8cf89",
+    "default": "todos-8cf89"
   }
 }
