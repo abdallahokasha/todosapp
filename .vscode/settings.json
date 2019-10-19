@@ -1,6 +1,7 @@
 {
-    "editor.fontFamily": "Operator Mono, Consolas, 'Courier New', monospace",
+    "editor.fontFamily": "Fira Code",
     "editor.fontLigatures": true,
     "window.zoomLevel": 0,
-    "editor.fontSize": 14
+    "editor.fontSize": 14,
+    "editor.fontWeight": "500"
 }
